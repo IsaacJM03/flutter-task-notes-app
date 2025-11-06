@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../models/task.dart';
+import '../utils/priority_colors.dart';
 
 class AddTaskScreen extends StatefulWidget {
   const AddTaskScreen({super.key});
@@ -119,7 +120,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                           height: 12,
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
-                            color: _getPriorityColor(priority),
+                            color: PriorityColors.getSolidColor(priority),
                           ),
                         ),
                         const SizedBox(width: 12),
@@ -175,18 +176,5 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
         ),
       ),
     );
-  }
-
-  Color _getPriorityColor(String priority) {
-    switch (priority.toLowerCase()) {
-      case 'high':
-        return Colors.red;
-      case 'medium':
-        return Colors.orange;
-      case 'low':
-        return Colors.green;
-      default:
-        return Colors.grey;
-    }
   }
 }

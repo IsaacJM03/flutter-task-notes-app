@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../models/task.dart';
+import '../utils/priority_colors.dart';
 import 'add_task_screen.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -44,19 +45,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
     if (result != null && result is Task) {
       _addTask(result);
-    }
-  }
-
-  Color _getPriorityColor(String priority) {
-    switch (priority.toLowerCase()) {
-      case 'high':
-        return Colors.red.shade100;
-      case 'medium':
-        return Colors.orange.shade100;
-      case 'low':
-        return Colors.green.shade100;
-      default:
-        return Colors.grey.shade100;
     }
   }
 
@@ -126,7 +114,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             borderRadius: BorderRadius.circular(12),
                             border: Border(
                               left: BorderSide(
-                                color: _getPriorityColor(task.priority),
+                                color: PriorityColors.getBorderColor(task.priority),
                                 width: 6,
                               ),
                             ),
@@ -161,7 +149,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     vertical: 4,
                                   ),
                                   decoration: BoxDecoration(
-                                    color: _getPriorityColor(task.priority),
+                                    color: PriorityColors.getShadeColor(task.priority),
                                     borderRadius: BorderRadius.circular(12),
                                   ),
                                   child: Text(
