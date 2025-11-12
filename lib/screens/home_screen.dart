@@ -4,9 +4,14 @@ import '../helpers/database_helper.dart';
 import 'add_task_screen.dart';
 
 class HomeScreen extends StatefulWidget {
-  final VoidCallback onThemeToggle;
+  final bool isDarkMode;
+  final ValueChanged<bool> onThemeChanged;
 
-  const HomeScreen({super.key, required this.onThemeToggle});
+  const HomeScreen({
+    super.key,
+    required this.isDarkMode,
+    required this.onThemeChanged,
+  });
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -73,13 +78,19 @@ class _HomeScreenState extends State<HomeScreen> {
         actions: [
           IconButton(
             icon: const Icon(Icons.brightness_6),
-            onPressed: widget.onThemeToggle,
+            onPressed: () => widget.onThemeChanged(!widget.isDarkMode),
             tooltip: 'Toggle theme',
           ),
         ],
       ),
       body: Column(
         children: [
+          SwitchListTile(
+            title: const Text('Dark theme'),
+            value: widget.isDarkMode,
+            onChanged: widget.onThemeChanged,
+            secondary: Icon(widget.isDarkMode ? Icons.dark_mode : Icons.light_mode),
+          ),
           Expanded(
             child: _isLoading
                 ? const Center(child: CircularProgressIndicator())

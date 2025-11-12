@@ -2,63 +2,47 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'screens/home_screen.dart';
 
-void main() {
-  runApp(const MyApp());
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  final prefs = await SharedPreferences.getInstance();
+  final isDark = prefs.getBool('isDarkMode') ?? false;
+  runApp(MyApp(initialDarkMode: isDark));
 }
 
 class MyApp extends StatefulWidget {
-  const MyApp({super.key});
+  final bool initialDarkMode;
+  const MyApp({super.key, required this.initialDarkMode});
 
   @override
   State<MyApp> createState() => _MyAppState();
 }
 
 class _MyAppState extends State<MyApp> {
-  ThemeMode _themeMode = ThemeMode.light;
+  late bool _isDarkMode;
 
   @override
   void initState() {
     super.initState();
-    _loadThemePreference();
+    _isDarkMode = widget.initialDarkMode;
   }
 
-  Future<void> _loadThemePreference() async {
+  Future<void> _setDarkMode(bool value) async {
+    setState(() => _isDarkMode = value);
     final prefs = await SharedPreferences.getInstance();
-    final isDark = prefs.getBool('isDarkMode') ?? false;
-    setState(() {
-      _themeMode = isDark ? ThemeMode.dark : ThemeMode.light;
-    });
-  }
-
-  Future<void> toggleTheme() async {
-    final prefs = await SharedPreferences.getInstance();
-    final isDark = _themeMode == ThemeMode.dark;
-    await prefs.setBool('isDarkMode', !isDark);
-    setState(() {
-      _themeMode = isDark ? ThemeMode.light : ThemeMode.dark;
-    });
+    await prefs.setBool('isDarkMode', value);
   }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Task Notes App',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: Colors.blue,
-          brightness: Brightness.light,
-        ),
-        useMaterial3: true,
+      title: 'My Tasks & Notes',
+      theme: ThemeData.light(),
+      darkTheme: ThemeData.dark(),
+      themeMode: _isDarkMode ? ThemeMode.dark : ThemeMode.light,
+      home: HomeScreen(
+        isDarkMode: _isDarkMode,
+        onThemeChanged: _setDarkMode,
       ),
-      darkTheme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: Colors.blue,
-          brightness: Brightness.dark,
-        ),
-        useMaterial3: true,
-      ),
-      themeMode: _themeMode,
-      home: HomeScreen(onThemeToggle: toggleTheme),
     );
   }
 }
