@@ -1,5 +1,5 @@
 # Flutter Task Notes App
-
+By Mwesigwa Isaac 23/U/12539/PS
 A Flutter application for managing tasks and notes with local persistence.
 
 ## Features
